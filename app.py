@@ -30,30 +30,33 @@ def application():
     # Header of appliaction
     st.set_page_config(page_title="Loan Calculator  - Devarshi")
     # Show Application Title
-    st.title(' Loan Calculator -Devarshi')
-    # Subheader
-    st.subheader("Provide the Details below")
+    st.title(' Loan Calculator by Devarshi')
+    st.subheader("Input Data")
+
     # Getting P,N,R as input
-    P = st.number_input("Principal (INR) : ", min_value=0.00, step=0.01)
-    N = st.number_input("Number of Years : ", min_value=0.00, step=0.01)
-    R = st.number_input("Rate of intrest : ", min_value=0.00, max_value=100.00, step=0.01)
+    col1, col2, col3 = st.columns(3)
+    P = col1.number_input("Principal (INR) ", min_value=0, value=1000000)
+    N = col2.number_input("Number of Years", min_value=0, value=5)
+    R = col3.number_input("Rate of intrest", min_value=0.00, max_value=100.00, value=5.5)
+
     # Adding button to perform application
     butt = st.button("Calculate")
+
     # After butt is clicked
     if butt:
         emi, amt, I, perI = loanCalc(P,N,R)
-        st.subheader("Calculated Loan Details")
-        st.write(f"**EMI** : {emi:.0f} INR")
-        st.write(f"**Amount** : {amt:.0f} INR")
-        st.write(f"**Intrest** : {I:.0f} INR")
-        st.write(f"**Percentage Intrest** : {perI:.2f} %")
+
+        col1, col2 = st.columns(2)
+        col1.metric(label="Monthly EMI", value=f"Rs {emi:,.0f}")
+        col1.metric(label="Total Intrest", value=f"Rs {I:,.0f}")
+        col1.metric(label="Total Amount", value=f"Rs {amt:,.0f}")
+        
         # Creatig Visuals
-        st.subheader("Visuals")
         d = {"details":["Principal","Intrest"],
              "values": [P, I]}
         df = pd.DataFrame(d)
         fig = px.pie(data_frame=df, names="details", values="values", color_discrete_sequence=["green", "orange"])
-        st.plotly_chart(fig)
+        col2.plotly_chart(fig)
 
 
 
