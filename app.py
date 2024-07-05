@@ -1,4 +1,8 @@
 import streamlit as st
+import pandas as pd
+import plotly.express as px
+from warnings import filterwarnings
+filterwarnings('ignore')
 
 def loanCalc(P,N,R):
     # Converting years to months
@@ -43,7 +47,13 @@ def application():
         st.write(f"**Amount** : {amt:.0f} INR")
         st.write(f"**Intrest** : {I:.0f} INR")
         st.write(f"**Percentage Intrest** : {perI:.2f} %")
-
+        # Creatig Visuals
+        st.subheader("Visuals")
+        d = {"details":["Principal","Intrest"],
+             "values": [P, I]}
+        df = pd.DataFrame(d)
+        fig = px.pie(data_frame=df, names="details", values="values", color_discrete_sequence=["green", "orange"])
+        st.plotly_chart(fig)
 
 
 
